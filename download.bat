@@ -16,10 +16,13 @@ rem else must be on the same line as ), otherwise batch doesn't recognise it
 )
 
 :download
-powershell -Command "Invoke-WebRequest '%url%' -OutFile '%~dp0/rustup-init.exe'"
+pushd %~dp0
+powershell -Command "Invoke-WebRequest '%url%' -OutFile 'rustup-init.exe'"
+popd
 
 :install
 call scripts/all
-rem To get started you need Cargo's bin directory (D:\Programs\Installed\rustup \test\.cargo\bin) in your PATH environment variable. This has not been done automatically.
-rem To get started you need Cargo''s bin directory (*\.cargo\bin) in your PATH environment variable. This has not been done automatically.
-powershell -ExecutionPolicy Bypass "%~dp0/scripts/rustup-init"
+
+pushd %~dp0
+powershell -ExecutionPolicy Bypass "scripts/install"
+popd

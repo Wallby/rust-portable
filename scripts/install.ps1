@@ -39,7 +39,7 @@ function Filter-Line()
 
 try
 {
-    .\rustup-init.exe -y --profile minimal --no-modify-path | Filter-Line
+    ./rustup-init.exe -y --profile minimal --no-modify-path | Filter-Line
 }
 catch
 {
@@ -49,3 +49,22 @@ catch
 }
 
 Remove-Item rustup-init.exe | Out-Null
+
+New-Item -Type Directory bin | Out-Null
+
+$programs = Get-ChildItem .cargo/bin
+foreach($exe in $programs)
+{
+    # Double quotes "" would resolve $1 before passing to -replace
+    # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-7.5#regular-expressions-substitutions
+    $program = $exe -replace "(.+)\.exe", "`$1"
+    
+    $file = @"
+@echo off
+call "%~dp0\..\scripts\all"
+"%~dp0\..\.cargo\bin\$program" %*
+"@
+
+    # .bat files must not be in UTF-8 BOM encoding, which is default for Out-File
+    $file | Out-File "bin/$program.bat" -Encoding OEM | Out-Null
+}
