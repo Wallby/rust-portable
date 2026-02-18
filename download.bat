@@ -21,7 +21,7 @@ powershell -Command "Invoke-WebRequest '%url%' -OutFile 'rustup-init.exe'"
 popd
 
 :install
-call scripts/all
+call %~dp0\scripts\all
 
 pushd %~dp0
 powershell -ExecutionPolicy Bypass "scripts/install"

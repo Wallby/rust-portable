@@ -20,13 +20,13 @@ function Filter-Line()
     )
     if($silenced)
     {
-        Write-Host "Silenced...";
+        #Write-Host "Silenced..."
         return;
     }
     # For some reason rustup-init.exe produces a $null output at the end
     if(!$lines)
     {
-        return;
+        return
     }
     $lines | % {
         switch -Wildcard ($_.Trim())
